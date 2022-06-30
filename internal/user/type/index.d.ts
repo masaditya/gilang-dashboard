@@ -1,3 +1,5 @@
+import { TruckType } from "internal/truck/type";
+
 export type UserInfoType = {
   is_active?: boolean;
   id?: number;
@@ -8,6 +10,7 @@ export type UserInfoType = {
   role?: 'USER' | 'ADMIN';
   email?: string;
   full_name?: string;
+  trucks? : TruckType[]
 };
 
 export type QueryStringUser = {
