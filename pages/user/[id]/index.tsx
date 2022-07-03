@@ -1,6 +1,6 @@
-import MainLayout from 'components/layout';
-import useAuth, { PropsType } from 'internal/base/middleware/auth';
-import type { NextPage } from 'next';
+import MainLayout from "components/layout";
+import useAuth, { PropsType } from "internal/base/middleware/auth";
+import type { NextPage } from "next";
 import {
   Button,
   Card,
@@ -13,32 +13,33 @@ import {
   Empty,
   Collapse,
   Space,
-} from 'antd';
-import type { ColumnsType } from 'antd/lib/table';
-import React, { useEffect, useState } from 'react';
-import { GetUser, GetUserByID } from 'internal/user/api';
-import { UserInfoType } from 'internal/user/type';
-import { useRouter } from 'next/router';
-import UserStateFn from 'internal/user/state';
-interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-  tags: string[];
-}
+  Modal,
+  Popconfirm,
+  message,
+} from "antd";
+import type { ColumnsType } from "antd/lib/table";
+import React, { useEffect, useState } from "react";
+import { GetUser, GetUserByID, UpdateUser } from "internal/user/api";
+import { UserInfoType } from "internal/user/type";
+import { useRouter } from "next/router";
+import UserStateFn from "internal/user/state";
+
 const UserPageDetail: NextPage = (props: PropsType) => {
   const router = useRouter();
-  const { userDetail } = UserStateFn(props.user, router.query?.id?.toString());
-  const [isUpdate, setIsUpdate] = useState(false);
-  const [form] = Form.useForm();
-
-  useEffect(() => {
-    if (userDetail) {
-      console.log(userDetail);
-      form.setFieldsValue(userDetail);
-    }
-  }, [userDetail]);
+  const {
+    isModalVisible,
+    handleResetPasswordUser,
+    setIsModalVisible,
+    userDetail,
+    handleFinishSave,
+    isUpdate,
+    setIsUpdate,
+    form,
+    formResetPassword,
+    handleActivate,
+    handleDeactivate,
+    handleHardResetPassword
+  } = UserStateFn(props.user, router.query?.id?.toString());
 
   return (
     <MainLayout title="User Detail" router={router}>
@@ -46,8 +47,39 @@ const UserPageDetail: NextPage = (props: PropsType) => {
         title="User"
         extra={
           <Space size="large">
-            <Button danger type="primary">Reset Password</Button>
-            <Button onClick={()=> setIsUpdate(!isUpdate)}>Edit</Button>
+            {props.user?.role === "USER" && (
+              <Button
+                danger
+                onClick={() => setIsModalVisible(true)}
+                type="primary"
+              >
+                Change Password
+              </Button>
+            )}
+            {props.user?.role === "ADMIN" && (
+              <Popconfirm
+                title={`Reset password user ${userDetail?.full_name}?`}
+                onConfirm={handleHardResetPassword}
+                onCancel={()=> message.info("Cancel Reset Password")}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button danger type="primary">
+                  Reset Password User 
+                </Button>
+              </Popconfirm>
+            )}
+            <Button onClick={() => setIsUpdate(!isUpdate)}>Edit</Button>
+            {props.user?.role === "ADMIN" && (
+              <Button danger type="dashed" onClick={handleDeactivate}>
+                Deactivate
+              </Button>
+            )}
+            {props.user?.role === "ADMIN" && (
+              <Button danger type="dashed" onClick={handleActivate}>
+                Activate
+              </Button>
+            )}
           </Space>
         }
       >
@@ -57,6 +89,7 @@ const UserPageDetail: NextPage = (props: PropsType) => {
           wrapperCol={{ span: 14 }}
           layout="horizontal"
           disabled={!isUpdate}
+          onFinish={handleFinishSave}
         >
           <Form.Item label="First Name" name="first_name">
             <Input />
@@ -77,21 +110,84 @@ const UserPageDetail: NextPage = (props: PropsType) => {
             </Radio.Group>
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary">Save</Button>
+            <Button htmlType="submit" type="primary">
+              Save
+            </Button>
           </Form.Item>
         </Form>
 
+        {/* MODAL RESET PASSWORD */}
+        <Modal
+          title="Reset Password"
+          visible={isModalVisible}
+          onOk={handleResetPasswordUser}
+          onCancel={() => setIsModalVisible(false)}
+        >
+          <Form form={formResetPassword}>
+            <Form.Item
+              name="old_password"
+              label="Old Password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input the Old Password!",
+                },
+              ]}
+            >
+              <Input type="password" />
+            </Form.Item>
+            <Form.Item
+              name="new_password"
+              label="New Password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input the New Password!",
+                },
+              ]}
+            >
+              <Input type="password" />
+            </Form.Item>
+            <Form.Item
+              name="new_password_confirmation"
+              label="Confirm New Password"
+              dependencies={["new_password"]}
+              hasFeedback
+              rules={[
+                {
+                  required: true,
+                  message: "Please confirm your password!",
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("new_password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error(
+                        "The two passwords that you entered do not match!"
+                      )
+                    );
+                  },
+                }),
+              ]}
+            >
+              <Input type="password" />
+            </Form.Item>
+          </Form>
+        </Modal>
+
         <Typography.Paragraph strong>Trucks</Typography.Paragraph>
-        {typeof userDetail?.trucks === 'undefined' && userDetail?.trucks ? (
+        {typeof userDetail?.trucks === "undefined" && userDetail?.trucks ? (
           <Collapse accordion>
             <Collapse.Panel header="This is Collapse.panel header 1" key="1">
-              <p>{'text'}</p>
+              <p>{"text"}</p>
             </Collapse.Panel>
             <Collapse.Panel header="This is Collapse.panel header 2" key="2">
-              <p>{'text'}</p>
+              <p>{"text"}</p>
             </Collapse.Panel>
             <Collapse.Panel header="This is Collapse.panel header 3" key="3">
-              <p>{'text'}</p>
+              <p>{"text"}</p>
             </Collapse.Panel>
           </Collapse>
         ) : (

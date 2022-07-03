@@ -33,6 +33,7 @@ const LoginPage: NextPage = () => {
         (res: AxiosResponse<{ access_token: string; user: UserInfoType }>) => {
           if (res.data.user.role === 'ADMIN') {
             SetTokenAdmin(res.data.access_token);
+            SetToken(res.data.access_token);
             router.push('/admin');
           }
           if (res.data.user.role === 'USER') {
