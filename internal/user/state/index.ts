@@ -24,7 +24,6 @@ const UserStateFn = (userInfo?: UserInfoType, id_user?: string | number) => {
 
   React.useEffect(() => {
     if (userDetail) {
-      console.log(userDetail);
       form.setFieldsValue(userDetail);
     }
   }, [userDetail]);
@@ -39,7 +38,6 @@ const UserStateFn = (userInfo?: UserInfoType, id_user?: string | number) => {
   React.useEffect(() => {
     GetUser().then((res) => {
       setUserList(res.data.data);
-    handleSearchByEmail()
 
     });
   }, []);
@@ -100,11 +98,10 @@ const UserStateFn = (userInfo?: UserInfoType, id_user?: string | number) => {
         .catch(ErrorHandler);
   };
 
-  const handleSearchByEmail = () => {
-    GetUserByEmail("mbahban@leoxi.net").then(res => {
-      console.log(res)
-    }).catch(ErrorHandler)
-  };
+  // const handleSearchByEmail = () => {
+  //   GetUserByEmail("mbahban@leoxi.net").then(res => {
+  //   }).catch(ErrorHandler)
+  // };
 
   return {
     userList,
@@ -120,7 +117,6 @@ const UserStateFn = (userInfo?: UserInfoType, id_user?: string | number) => {
     handleActivate,
     handleDeactivate,
     handleHardResetPassword,
-    handleSearchByEmail
   };
 };
 

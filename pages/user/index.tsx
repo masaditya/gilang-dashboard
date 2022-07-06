@@ -19,10 +19,8 @@ interface DataType {
 }
 const UserPage: NextPage = () => {
   const router = useRouter();
-  const { userList, handleSearchByEmail } = UserStateFn();
-  React.useEffect(() => {
-    console.log(router.pathname);
-  }, [])
+  const { userList} = UserStateFn();
+ 
   
   const columns: ColumnsType<UserInfoType> = [
     {

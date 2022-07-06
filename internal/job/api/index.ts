@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { HTTPClientAuth } from 'internal/base/http';
 import * as Token from 'internal/base/auth/token';
-import { ItemType, ProcessJobType } from '../type';
+import { ItemType, ProcessJobType, SalesOrderType } from '../type';
 
 export const FindPO = (): Promise<AxiosResponse> => {
   return HTTPClientAuth(Token).get('/job/find-po');
