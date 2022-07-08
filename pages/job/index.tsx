@@ -1,6 +1,6 @@
 import MainLayout from "components/layout";
-import useAuth from "internal/base/middleware/auth";
-import useAuthAdmin from "internal/base/middleware/authAdmin";
+import uAuthn from "internal/base/middleware/auth";
+import AuthnAdmin from "internal/base/middleware/authAdmin";
 import type { NextPage } from "next";
 import { Button, Space, Table, Tag, Typography, Tabs } from "antd";
 import type { ColumnsType } from "antd/lib/table";
@@ -20,12 +20,12 @@ const JobPage: NextPage = () => {
 
   const columns: ColumnsType<JobType> = [
     {
-      title: "Sales Order ID",
+      title: "Purchase Order ID",
       dataIndex: "so_id",
       key: "so_id",
     },
     {
-      title: "User Name",
+      title: "Driver",
       dataIndex: "user",
       key: "user",
       render: (record: UserInfoType, data: JobType) => (
@@ -63,4 +63,4 @@ const JobPage: NextPage = () => {
   );
 };
 
-export default useAuth(JobPage);
+export default uAuthn(JobPage);

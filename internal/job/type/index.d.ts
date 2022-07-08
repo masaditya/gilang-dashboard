@@ -9,6 +9,7 @@ export type JobType= {
   details:     Detail[];
   user:        UserInfoType;
   attachments: Attachment[];
+  so : any;
 }
 
 export type Attachment= {

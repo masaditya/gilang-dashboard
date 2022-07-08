@@ -1,5 +1,5 @@
 import MainLayout from "components/layout";
-import useAuth, { PropsType } from "internal/base/middleware/auth";
+import uAuthn, { PropsType } from "internal/base/middleware/auth";
 import type { NextPage } from "next";
 import {
   Button,
@@ -16,6 +16,10 @@ import {
   Modal,
   Popconfirm,
   message,
+  Divider,
+  Layout,
+  Row,
+  Col,
 } from "antd";
 import type { ColumnsType } from "antd/lib/table";
 import React, { useEffect, useState } from "react";
@@ -38,7 +42,7 @@ const UserPageDetail: NextPage = (props: PropsType) => {
     formResetPassword,
     handleActivate,
     handleDeactivate,
-    handleHardResetPassword
+    handleHardResetPassword,
   } = UserStateFn(props.user, router.query?.id?.toString());
 
   return (
@@ -60,22 +64,22 @@ const UserPageDetail: NextPage = (props: PropsType) => {
               <Popconfirm
                 title={`Reset password user ${userDetail?.full_name}?`}
                 onConfirm={handleHardResetPassword}
-                onCancel={()=> message.info("Cancel Reset Password")}
+                onCancel={() => message.info("Cancel Reset Password")}
                 okText="Yes"
                 cancelText="No"
               >
                 <Button danger type="primary">
-                  Reset Password User 
+                  Reset Password User
                 </Button>
               </Popconfirm>
             )}
             <Button onClick={() => setIsUpdate(!isUpdate)}>Edit</Button>
-            {props.user?.role === "ADMIN" && (
+            {props.user?.role === "ADMIN" && userDetail?.is_active && (
               <Button danger type="dashed" onClick={handleDeactivate}>
                 Deactivate
               </Button>
             )}
-            {props.user?.role === "ADMIN" && (
+            {props.user?.role === "ADMIN" && !userDetail?.is_active && (
               <Button danger type="dashed" onClick={handleActivate}>
                 Activate
               </Button>
@@ -177,8 +181,7 @@ const UserPageDetail: NextPage = (props: PropsType) => {
           </Form>
         </Modal>
 
-        <Typography.Paragraph strong>Trucks</Typography.Paragraph>
-        {typeof userDetail?.trucks === "undefined" && userDetail?.trucks ? (
+        {/* {typeof userDetail?.trucks === "undefined" && userDetail?.trucks ? (
           <Collapse accordion>
             <Collapse.Panel header="This is Collapse.panel header 1" key="1">
               <p>{"text"}</p>
@@ -192,10 +195,51 @@ const UserPageDetail: NextPage = (props: PropsType) => {
           </Collapse>
         ) : (
           <Empty description="Data Truck Not Found" />
+        )} */}
+
+        <Divider orientation="left"> Trucks </Divider>
+
+        {userDetail?.trucks && userDetail?.trucks.length > 0 ? (
+          <Layout className="detail-content">
+            <Row gutter={[12, 8]}>
+              {userDetail?.trucks.map((item) => (
+                <Col span={8} key={item.id}>
+                  <Card title={item.license_plate} hoverable>
+                    <Row>
+                      <Col span={10}>
+                        <Typography.Paragraph strong>
+                          Capacity
+                        </Typography.Paragraph>
+                      </Col>
+                      <Col span={14}>
+                        <Typography.Paragraph>
+                          : {item.capacity}
+                        </Typography.Paragraph>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={10}>
+                        <Typography.Paragraph strong>
+                          Status
+                        </Typography.Paragraph>
+                      </Col>
+                      <Col span={14}>
+                        <Typography.Paragraph>
+                          : {item.status}
+                        </Typography.Paragraph>
+                      </Col>
+                    </Row>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          </Layout>
+        ) : (
+          <Empty description="No Truck" />
         )}
       </Card>
     </MainLayout>
   );
 };
 
-export default useAuth(UserPageDetail);
+export default uAuthn(UserPageDetail);

@@ -9,7 +9,7 @@ export type PropsType = {
   user?: UserInfoType;
 };
 
-const useAuthAdmin =
+const AuthnAdmin =
   (
     Comp: React.ComponentClass<PropsType> | React.FunctionComponent<PropsType>
   ): ((props: any) => React.ReactElement) =>
@@ -27,4 +27,4 @@ const useAuthAdmin =
     return <Comp {...props} user={userInfo} />;
   };
 
-export default useAuthAdmin;
+export default AuthnAdmin;

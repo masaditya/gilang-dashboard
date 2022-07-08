@@ -1,6 +1,5 @@
 import MainLayout from "components/layout";
-import useAuth from "internal/base/middleware/auth";
-import useAuthAdmin from "internal/base/middleware/authAdmin";
+import uAuthn from "internal/base/middleware/auth";
 import type { NextPage } from "next";
 import {
   Button,
@@ -10,16 +9,13 @@ import {
   Modal,
   Row,
   Select,
-  Space,
   Switch,
   Table,
   Tag,
+  Typography,
 } from "antd";
 import type { ColumnsType } from "antd/lib/table";
-import React, { useState } from "react";
-import { GetUser } from "internal/user/api";
-import { UserInfoType } from "internal/user/type";
-import UserStateFn from "internal/user/state";
+import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import TruckStateFn from "internal/truck/state";
@@ -48,12 +44,12 @@ const TruckPage: NextPage = () => {
     },
     {
       title: "Status",
-      dataIndex: "status",
-      key: "status",
+      dataIndex: "is_active",
+      key: "is_active",
       render: (record: string, data: TruckType) => {
         return (
           <Tag color={record ? "blue" : "red"} key={data.license_plate}>
-            {record}
+            {record ? "Active" : "Non-Active"}
           </Tag>
         );
       },
@@ -62,11 +58,14 @@ const TruckPage: NextPage = () => {
       title: "Capacity",
       dataIndex: "capacity",
       key: "capacity",
+      render: (record: string, data: TruckType) => (
+        <Typography.Paragraph> {record ? record+" Ton" : "-"} </Typography.Paragraph>
+      ),
     },
     {
       title: "Detail",
-      dataIndex: "license_plate",
-      key: "license_plate",
+      dataIndex: "id",
+      key: "id",
       render: (record: string, data: TruckType) => {
         return (
           <Link href={"/truck/" + record}>
@@ -81,22 +80,21 @@ const TruckPage: NextPage = () => {
     <MainLayout title="Truck List" router={router}>
       <>
         <Row justify="end">
-          {" "}
           <Button
             onClick={() => setIsModalVisible(!isModalVisible)}
             type="primary"
           >
             Add New Truck
-          </Button>{" "}
+          </Button>
         </Row>
         <Table rowKey="id" columns={columns} dataSource={truckList} />
         <Modal
-          title="Reset Password"
+          title="Add Truck"
           visible={isModalVisible}
           onOk={handleCreateTruck}
           onCancel={() => setIsModalVisible(false)}
         >
-          <Form form={form}>
+          <Form form={form} layout="vertical">
             <Form.Item
               name="license_plate"
               label="License Plate"
@@ -109,66 +107,26 @@ const TruckPage: NextPage = () => {
             >
               <Input type="text" />
             </Form.Item>
-            <Form.Item
-              name="notes"
-              label="Notes"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input the Notes!",
-                },
-              ]}
-            >
+            <Form.Item name="notes" label="Notes">
               <Input type="text" />
             </Form.Item>
-            <Form.Item
-              name="type"
-              label="Type"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input the Type!",
-                },
-              ]}
-            >
+            <Form.Item name="type" label="Type">
               <Input type="text" />
             </Form.Item>
-            <Form.Item
-              name="status"
-              label="Status"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input the Status!",
-                },
-              ]}
-            >
+            <Form.Item name="status" label="Status">
               <Input type="text" />
             </Form.Item>
             <Form.Item
               name="capacity"
               label="Capacity"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input the Capacity!",
-                },
-                { type: "number" },
-              ]}
+              rules={[{ type: "number" }]}
             >
-              <InputNumber/>
+              <InputNumber
+                style={{ width: "100%" }}
+                placeholder="Berat dalam Ton"
+              />
             </Form.Item>
-            <Form.Item
-              name="is_active"
-              label="Active"
-              valuePropName="checked"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input the Active!",
-                },
-              ]}
-            >
+            <Form.Item name="is_active" label="Active" valuePropName="checked">
               <Switch />
             </Form.Item>
             <Form.Item
@@ -196,4 +154,4 @@ const TruckPage: NextPage = () => {
   );
 };
 
-export default useAuth(TruckPage);
+export default uAuthn(TruckPage);

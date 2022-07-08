@@ -1,4 +1,4 @@
-import useAuthAdmin from 'internal/base/middleware/authAdmin'
+import AuthnAdmin from 'internal/base/middleware/authAdmin'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -12,4 +12,4 @@ const AdminPage: NextPage = () => {
   )
 }
 
-export default useAuthAdmin(AdminPage)
+export default AuthnAdmin(AdminPage)

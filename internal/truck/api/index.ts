@@ -19,8 +19,8 @@ export const GetTruckByID = (id: string): Promise<AxiosResponse> => {
   return HTTPClientAuth(Token).get('/truck/' + id);
 };
 
-export const UpdateTruck = (id: string): Promise<AxiosResponse> => {
-    return HTTPClientAuth(Token).patch('/truck/' + id, {});
+export const UpdateTruck = (id: string, data : any): Promise<AxiosResponse> => {
+    return HTTPClientAuth(Token).patch('/truck/' + id, data);
 };
 
 export const DeleteTruck = (id: string): Promise<AxiosResponse> => {

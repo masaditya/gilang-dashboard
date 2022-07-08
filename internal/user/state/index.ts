@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { ErrorHandler } from "utils/errorHandler";
 import {
   ActivateUser,
+  AddUser,
   DeactivateUser,
   GetUser,
   GetUserByEmail,
@@ -18,6 +19,8 @@ const UserStateFn = (userInfo?: UserInfoType, id_user?: string | number) => {
   const [userDetail, setUserDetail] = useState<UserInfoType>();
   const [isUpdate, setIsUpdate] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const [loading, setLoading] = useState(false);
 
   const [form] = Form.useForm();
   const [formResetPassword] = Form.useForm();
@@ -36,14 +39,16 @@ const UserStateFn = (userInfo?: UserInfoType, id_user?: string | number) => {
   }, [id_user]);
 
   React.useEffect(() => {
+    setLoading(true);
     GetUser().then((res) => {
       setUserList(res.data.data);
-
+      setLoading(false);
     });
   }, []);
 
   const handleFinishSave = (values: any) => {
-    id_user &&
+    setLoading(true);
+    if (id_user)
       UpdateUser(values, id_user?.toString())
         .then((res) => {
           notification.success({
@@ -52,6 +57,20 @@ const UserStateFn = (userInfo?: UserInfoType, id_user?: string | number) => {
           setIsUpdate(!isUpdate);
         })
         .catch(ErrorHandler);
+    else
+      form.validateFields().then((values) => {
+        AddUser(values).then((res) => {
+          notification.success({
+            message: "Success Create User",
+          });
+          GetUser().then((result) => {
+            setIsModalVisible(false)
+            setUserList(result.data.data);
+            setLoading(false);
+
+          });
+        });
+      });
   };
 
   const handleResetPasswordUser = () => {
@@ -75,7 +94,10 @@ const UserStateFn = (userInfo?: UserInfoType, id_user?: string | number) => {
     id_user &&
       ActivateUser(id_user.toString())
         .then((res) => {
-          notification.success({ message: res.data.message });
+          notification.success({ message: "Success Activate User" });
+          GetUserByID(id_user.toString()).then((res) => {
+            setUserDetail(res.data);
+          });
         })
         .catch(ErrorHandler);
   };
@@ -84,7 +106,10 @@ const UserStateFn = (userInfo?: UserInfoType, id_user?: string | number) => {
     id_user &&
       DeactivateUser(id_user.toString())
         .then((res) => {
-          notification.success({ message: res.data.message });
+          notification.success({ message: "Success Deactivate User" });
+          GetUserByID(id_user.toString()).then((res) => {
+            setUserDetail(res.data);
+          });
         })
         .catch(ErrorHandler);
   };
@@ -93,7 +118,10 @@ const UserStateFn = (userInfo?: UserInfoType, id_user?: string | number) => {
     id_user &&
       HardResetPasswordUser(id_user.toString())
         .then((res) => {
-          notification.success({ message: res.data.message });
+          notification.success({ message: "Success Reset Password User" });
+          GetUserByID(id_user.toString()).then((res) => {
+            setUserDetail(res.data);
+          });
         })
         .catch(ErrorHandler);
   };
@@ -117,6 +145,7 @@ const UserStateFn = (userInfo?: UserInfoType, id_user?: string | number) => {
     handleActivate,
     handleDeactivate,
     handleHardResetPassword,
+    loading,
   };
 };
 

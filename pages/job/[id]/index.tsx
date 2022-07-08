@@ -1,5 +1,5 @@
 import MainLayout from "components/layout";
-import useAuth, { PropsType } from "internal/base/middleware/auth";
+import uAuthn, { PropsType } from "internal/base/middleware/auth";
 import type { NextPage } from "next";
 import {
   Button,
@@ -16,6 +16,7 @@ import {
 import React from "react";
 import { useRouter } from "next/router";
 import JobStateFn from "internal/job/state";
+import moment from "moment";
 
 const JobDetailPage: NextPage = (props: PropsType) => {
   const router = useRouter();
@@ -25,7 +26,7 @@ const JobDetailPage: NextPage = (props: PropsType) => {
       <Card title="Job Detail" extra={<Button onClick={()=> jobDetail?.so_id && getPDFReport(jobDetail?.so_id.toString())} type="primary">Report PDF</Button>}>
         <Row>
           <Col span={10}>
-            <Typography.Paragraph strong>Sales Order ID</Typography.Paragraph>
+            <Typography.Paragraph strong>Purchase Order ID</Typography.Paragraph>
           </Col>
           <Col span={14}>
             <Typography.Paragraph>{jobDetail?.so_id}</Typography.Paragraph>
@@ -39,11 +40,27 @@ const JobDetailPage: NextPage = (props: PropsType) => {
             </Tag>
           </Col>
           <Col span={10}>
-            <Typography.Paragraph strong> User Name </Typography.Paragraph>
+            <Typography.Paragraph strong> Sales </Typography.Paragraph>
           </Col>
           <Col span={14}>
             <Typography.Paragraph>
-              {jobDetail?.user.full_name}
+              {jobDetail?.so.user.full_name}
+            </Typography.Paragraph>
+          </Col>
+          <Col span={10}>
+            <Typography.Paragraph strong> Transaction Date </Typography.Paragraph>
+          </Col>
+          <Col span={14}>
+            <Typography.Paragraph>
+              {moment(jobDetail?.so?.transaction_date).format("DD MMMM YYYY HH:mm")}
+            </Typography.Paragraph>
+          </Col>
+          <Col span={10}>
+            <Typography.Paragraph strong> Transaction Number </Typography.Paragraph>
+          </Col>
+          <Col span={14}>
+            <Typography.Paragraph>
+              {jobDetail?.so?.transaction_number}
             </Typography.Paragraph>
           </Col>
         </Row>
@@ -111,4 +128,4 @@ const JobDetailPage: NextPage = (props: PropsType) => {
   );
 };
 
-export default useAuth(JobDetailPage);
+export default uAuthn(JobDetailPage);
