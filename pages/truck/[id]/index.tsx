@@ -1,5 +1,5 @@
 import MainLayout from "components/layout";
-import useAuth, { PropsType } from "internal/base/middleware/auth";
+import Authn, { PropsType } from "internal/base/middleware/auth";
 import type { NextPage } from "next";
 import {
   Button,
@@ -167,4 +167,4 @@ const TruckDetailPage: NextPage = (props: PropsType) => {
   );
 };
 
-export default useAuth(TruckDetailPage);
+export default Authn(TruckDetailPage);
