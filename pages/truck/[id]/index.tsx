@@ -5,7 +5,6 @@ import {
   Button,
   Card,
   Col,
-  Collapse,
   Divider,
   Empty,
   Form,
@@ -14,21 +13,15 @@ import {
   Layout,
   Modal,
   Popconfirm,
-  Radio,
   Row,
   Select,
   Space,
   Switch,
-  Table,
-  Tag,
   Typography,
 } from "antd";
-import type { ColumnsType } from "antd/lib/table";
 import React from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import TruckStateFn from "internal/truck/state";
-import { TruckType } from "internal/truck/type";
 
 const TruckDetailPage: NextPage = (props: PropsType) => {
   const router = useRouter();
@@ -43,7 +36,7 @@ const TruckDetailPage: NextPage = (props: PropsType) => {
     truckDetail,
     handleAssignUser,
     formAssignUser,
-    handleDeleteTruck
+    handleDeleteTruck,
   } = TruckStateFn(props.user, router.query?.id?.toString());
 
   return (

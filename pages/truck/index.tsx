@@ -30,6 +30,9 @@ const TruckPage: NextPage = () => {
     setIsModalVisible,
     form,
     userList,
+    loading,
+    pagination,
+    handleTableChange,
   } = TruckStateFn();
   const columns: ColumnsType<TruckType> = [
     {
@@ -59,7 +62,10 @@ const TruckPage: NextPage = () => {
       dataIndex: "capacity",
       key: "capacity",
       render: (record: string, data: TruckType) => (
-        <Typography.Paragraph> {record ? record+" Ton" : "-"} </Typography.Paragraph>
+        <Typography.Paragraph>
+          {" "}
+          {record ? record + " Ton" : "-"}{" "}
+        </Typography.Paragraph>
       ),
     },
     {
@@ -87,7 +93,14 @@ const TruckPage: NextPage = () => {
             Add New Truck
           </Button>
         </Row>
-        <Table rowKey="id" columns={columns} dataSource={truckList} />
+        <Table
+          pagination={pagination}
+          loading={loading}
+          onChange={handleTableChange}
+          rowKey="id"
+          columns={columns}
+          dataSource={truckList}
+        />
         <Modal
           title="Add Truck"
           visible={isModalVisible}

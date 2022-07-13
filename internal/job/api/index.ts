@@ -7,8 +7,8 @@ export const FindPO = (): Promise<AxiosResponse> => {
   return HTTPClientAuth(Token).get('/job/find-po');
 };
 
-export const GetJob = (): Promise<AxiosResponse> => {
-  return HTTPClientAuth(Token).get('/job');
+export const GetJob = (page? : number, limit? : number): Promise<AxiosResponse> => {
+  return HTTPClientAuth(Token).get(`/job?page=${page}&limit=${limit}`);
 };
 
 export const GetJobHistory = (): Promise<AxiosResponse> => {

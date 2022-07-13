@@ -16,7 +16,7 @@ import moment from "moment";
 
 const JobPage: NextPage = () => {
   const router = useRouter();
-  const { jobList, salesOrderList } = JobStateFn();
+  const { jobList, pagination, handleTableChange, loading } = JobStateFn();
 
   const columns: ColumnsType<JobType> = [
     {
@@ -58,7 +58,15 @@ const JobPage: NextPage = () => {
 
   return (
     <MainLayout title="Job List" router={router}>
-          <Table rowKey="id" columns={columns} dataSource={jobList} />
+      <Table
+        pagination={pagination}
+        rowKey="id"
+        columns={columns}
+        dataSource={jobList}
+        onChange={handleTableChange}
+        loading={loading}
+        
+      />
     </MainLayout>
   );
 };

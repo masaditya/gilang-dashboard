@@ -63,7 +63,7 @@ const UserPageDetail: NextPage = (props: PropsType) => {
             {props.user?.role === "ADMIN" && (
               <Popconfirm
                 title={`Reset password user ${userDetail?.full_name}?`}
-                onConfirm={handleHardResetPassword}
+                onConfirm={() => setIsModalVisible(true)}
                 onCancel={() => message.info("Cancel Reset Password")}
                 okText="Yes"
                 cancelText="No"
@@ -124,22 +124,10 @@ const UserPageDetail: NextPage = (props: PropsType) => {
         <Modal
           title="Reset Password"
           visible={isModalVisible}
-          onOk={handleResetPasswordUser}
+          onOk={handleHardResetPassword}
           onCancel={() => setIsModalVisible(false)}
         >
           <Form form={formResetPassword}>
-            <Form.Item
-              name="old_password"
-              label="Old Password"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input the Old Password!",
-                },
-              ]}
-            >
-              <Input type="password" />
-            </Form.Item>
             <Form.Item
               name="new_password"
               label="New Password"
@@ -180,22 +168,6 @@ const UserPageDetail: NextPage = (props: PropsType) => {
             </Form.Item>
           </Form>
         </Modal>
-
-        {/* {typeof userDetail?.trucks === "undefined" && userDetail?.trucks ? (
-          <Collapse accordion>
-            <Collapse.Panel header="This is Collapse.panel header 1" key="1">
-              <p>{"text"}</p>
-            </Collapse.Panel>
-            <Collapse.Panel header="This is Collapse.panel header 2" key="2">
-              <p>{"text"}</p>
-            </Collapse.Panel>
-            <Collapse.Panel header="This is Collapse.panel header 3" key="3">
-              <p>{"text"}</p>
-            </Collapse.Panel>
-          </Collapse>
-        ) : (
-          <Empty description="Data Truck Not Found" />
-        )} */}
 
         <Divider orientation="left"> Trucks </Divider>
 

@@ -1,4 +1,5 @@
 import { Form, notification } from "antd";
+import { TablePaginationConfig } from "antd/es/table";
 import React, { useState } from "react";
 import { ErrorHandler } from "utils/errorHandler";
 import {
@@ -20,7 +21,11 @@ const UserStateFn = (userInfo?: UserInfoType, id_user?: string | number) => {
   const [isUpdate, setIsUpdate] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
+  const [pagination, setPagination] = useState<TablePaginationConfig>({
+    current: 1,
+    pageSize: 10,
+  });
 
   const [form] = Form.useForm();
   const [formResetPassword] = Form.useForm();
@@ -40,11 +45,22 @@ const UserStateFn = (userInfo?: UserInfoType, id_user?: string | number) => {
 
   React.useEffect(() => {
     setLoading(true);
-    GetUser().then((res) => {
+    GetUser({page : pagination.current, limit : pagination.pageSize}).then((res) => {
       setUserList(res.data.data);
+      setPagination({
+        total: res.data.meta.totalItems,
+        current: res.data.meta.currentPage,
+        pageSize: res.data.meta.itemsPerPage,
+      });
       setLoading(false);
     });
-  }, []);
+  }, [pagination.current, pagination.pageSize]);
+
+  const handleTableChange = (newPagination: TablePaginationConfig) => {
+    setPagination({
+      ...newPagination,
+    });
+  };
 
   const handleFinishSave = (values: any) => {
     setLoading(true);
@@ -64,10 +80,9 @@ const UserStateFn = (userInfo?: UserInfoType, id_user?: string | number) => {
             message: "Success Create User",
           });
           GetUser().then((result) => {
-            setIsModalVisible(false)
+            setIsModalVisible(false);
             setUserList(result.data.data);
             setLoading(false);
-
           });
         });
       });
@@ -116,20 +131,18 @@ const UserStateFn = (userInfo?: UserInfoType, id_user?: string | number) => {
 
   const handleHardResetPassword = () => {
     id_user &&
-      HardResetPasswordUser(id_user.toString())
-        .then((res) => {
-          notification.success({ message: "Success Reset Password User" });
-          GetUserByID(id_user.toString()).then((res) => {
-            setUserDetail(res.data);
-          });
-        })
-        .catch(ErrorHandler);
+      formResetPassword.validateFields().then((values: any) => {
+        HardResetPasswordUser(id_user.toString(), values)
+          .then((res) => {
+            notification.success({ message: "Success Reset Password User" });
+            setIsModalVisible(false)
+            GetUserByID(id_user.toString()).then((res) => {
+              setUserDetail(res.data);
+            });
+          })
+          .catch(ErrorHandler);
+      });
   };
-
-  // const handleSearchByEmail = () => {
-  //   GetUserByEmail("mbahban@leoxi.net").then(res => {
-  //   }).catch(ErrorHandler)
-  // };
 
   return {
     userList,
@@ -146,6 +159,8 @@ const UserStateFn = (userInfo?: UserInfoType, id_user?: string | number) => {
     handleDeactivate,
     handleHardResetPassword,
     loading,
+    pagination,
+    handleTableChange
   };
 };
 

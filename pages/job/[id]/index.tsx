@@ -10,6 +10,7 @@ import {
   Image,
   Layout,
   Row,
+  Table,
   Tag,
   Typography,
 } from "antd";
@@ -17,16 +18,34 @@ import React from "react";
 import { useRouter } from "next/router";
 import JobStateFn from "internal/job/state";
 import moment from "moment";
+import TableProducts from "components/table/products";
 
 const JobDetailPage: NextPage = (props: PropsType) => {
   const router = useRouter();
-  const { jobDetail, getPDFReport } = JobStateFn(props.user, router.query?.id?.toString());
+  const { jobDetail, getPDFReport, getDetailTimbang,  } = JobStateFn(
+    props.user,
+    router.query?.id?.toString()
+  );
   return (
     <MainLayout title="Job Detail" router={router}>
-      <Card title="Job Detail" extra={<Button onClick={()=> jobDetail?.so_id && getPDFReport(jobDetail?.so_id.toString())} type="primary">Report PDF</Button>}>
+      <Card
+        title="Job Detail"
+        extra={
+          <Button
+            onClick={() =>
+              jobDetail?.so_id && getPDFReport(jobDetail?.so_id.toString())
+            }
+            type="primary"
+          >
+            Report PDF
+          </Button>
+        }
+      >
         <Row>
           <Col span={10}>
-            <Typography.Paragraph strong>Purchase Order ID</Typography.Paragraph>
+            <Typography.Paragraph strong>
+              Purchase Order ID
+            </Typography.Paragraph>
           </Col>
           <Col span={14}>
             <Typography.Paragraph>{jobDetail?.so_id}</Typography.Paragraph>
@@ -44,19 +63,23 @@ const JobDetailPage: NextPage = (props: PropsType) => {
           </Col>
           <Col span={14}>
             <Typography.Paragraph>
-              {jobDetail?.so.user.full_name}
+              {jobDetail?.so?.user?.full_name}
             </Typography.Paragraph>
           </Col>
           <Col span={10}>
-            <Typography.Paragraph strong> Transaction Date </Typography.Paragraph>
+            <Typography.Paragraph strong>Transaction Date</Typography.Paragraph>
           </Col>
           <Col span={14}>
             <Typography.Paragraph>
-              {moment(jobDetail?.so?.transaction_date).format("DD MMMM YYYY HH:mm")}
+              {moment(jobDetail?.so?.transaction_date).format(
+                "DD MMMM YYYY HH:mm"
+              )}
             </Typography.Paragraph>
           </Col>
           <Col span={10}>
-            <Typography.Paragraph strong> Transaction Number </Typography.Paragraph>
+            <Typography.Paragraph strong>
+              Transaction Number
+            </Typography.Paragraph>
           </Col>
           <Col span={14}>
             <Typography.Paragraph>
@@ -67,44 +90,9 @@ const JobDetailPage: NextPage = (props: PropsType) => {
 
         <Divider orientation="left"> Products </Divider>
 
-        {jobDetail?.details && jobDetail?.details.length > 0 ? (
-          <Layout className="detail-content">
-            <Row gutter={[12, 8]}>
-              {jobDetail?.details.map((item) => (
-                <Col span={8} key={item.id}>
-                  <Card title={item.product.product.name} hoverable>
-                    <Row>
-                      <Col span={10}>
-                        <Typography.Paragraph strong>
-                          Jumlah
-                        </Typography.Paragraph>
-                      </Col>
-                      <Col span={14}>
-                        <Typography.Paragraph>
-                          : {item.head}
-                        </Typography.Paragraph>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col span={10}>
-                        <Typography.Paragraph strong>
-                          Berat
-                        </Typography.Paragraph>
-                      </Col>
-                      <Col span={14}>
-                        <Typography.Paragraph>
-                          : {item.weight} Kg
-                        </Typography.Paragraph>
-                      </Col>
-                    </Row>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-          </Layout>
-        ) : (
-          <Empty description="Product Not Found" />
-        )}
+        <Layout>
+          {jobDetail?.so && <TableProducts data={jobDetail?.details} getDetailTimbang={getDetailTimbang} />}
+        </Layout>
 
         <Divider orientation="left"> Attachment </Divider>
         {jobDetail?.attachments && jobDetail?.attachments.length > 0 ? (

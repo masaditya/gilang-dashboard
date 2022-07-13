@@ -1,4 +1,5 @@
 import { Form, notification } from "antd";
+import { TablePaginationConfig } from "antd/es/table";
 import { GetUser } from "internal/user/api";
 import { UserInfoType } from "internal/user/type";
 import { useRouter } from "next/router";
@@ -22,17 +23,39 @@ const TruckStateFn = (userInfo?: UserInfoType, id_truck?: string) => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [form] = Form.useForm();
-
+  const [loading, setLoading] = useState(false);
   const [formAssignUser] = Form.useForm();
+  const [pagination, setPagination] = useState<TablePaginationConfig>({
+    current: 1,
+    pageSize: 10,
+  });
 
   useEffect(() => {
-    Promise.all([GetTruck(), GetUser()])
-      .then(([resTruck, resUser]) => {
-        setTruckList(resTruck.data.data);
-        setUserList(resUser.data.data);
-      })
+    GetUser()
+      .then((resUser) => setUserList(resUser.data.data))
       .catch(ErrorHandler);
   }, []);
+
+  useEffect(() => {
+    setLoading(true)
+    GetTruck(pagination.current, pagination.pageSize)
+      .then((res) => {
+        setTruckList(res.data.data);
+        setPagination({
+          total: res.data.meta.totalItems,
+          current: res.data.meta.currentPage,
+          pageSize: res.data.meta.itemsPerPage,
+        });
+        setLoading(false)
+      })
+      .catch(ErrorHandler);
+  }, [pagination.current, pagination.pageSize]);
+
+  const handleTableChange = (newPagination: TablePaginationConfig) => {
+    setPagination({
+      ...newPagination,
+    });
+  };
 
   useEffect(() => {
     if (id_truck) {
@@ -114,7 +137,10 @@ const TruckStateFn = (userInfo?: UserInfoType, id_truck?: string) => {
     setIsUpdate,
     formAssignUser,
     handleAssignUser,
-    handleDeleteTruck
+    handleDeleteTruck,
+    handleTableChange,
+    loading,
+    pagination
   };
 };
 

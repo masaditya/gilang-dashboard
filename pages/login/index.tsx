@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input, Layout } from "antd";
+import { Button, Checkbox, Form, Input, Layout, notification } from "antd";
 import { AxiosError, AxiosResponse } from "axios";
 import {
   GetToken,
@@ -32,10 +32,8 @@ const LoginPage: NextPage = () => {
             SetTokenAdmin(res.data.access_token);
             SetToken(res.data.access_token);
             router.push("/");
-          }
-          if (res.data.user.role === "USER") {
-            SetToken(res.data.access_token);
-            router.push("/");
+          }else{
+            notification.error({message : "User Not Registered!"})
           }
         }
       )

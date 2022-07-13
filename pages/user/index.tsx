@@ -2,7 +2,18 @@ import MainLayout from "components/layout";
 import uAuthn from "internal/base/middleware/auth";
 import AuthnAdmin from "internal/base/middleware/authAdmin";
 import type { NextPage } from "next";
-import { Button, Form, Input, Modal, Radio, Row, Space, Switch, Table, Tag } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Modal,
+  Radio,
+  Row,
+  Space,
+  Switch,
+  Table,
+  Tag,
+} from "antd";
 import type { ColumnsType } from "antd/lib/table";
 import React, { useState } from "react";
 import { GetUser } from "internal/user/api";
@@ -13,9 +24,17 @@ import { useRouter } from "next/router";
 
 const UserPage: NextPage = () => {
   const router = useRouter();
-  const { userList, loading, form, isModalVisible, setIsModalVisible, handleFinishSave} = UserStateFn();
- 
-  
+  const {
+    userList,
+    loading,
+    form,
+    handleTableChange,
+    pagination,
+    isModalVisible,
+    setIsModalVisible,
+    handleFinishSave,
+  } = UserStateFn();
+
   const columns: ColumnsType<UserInfoType> = [
     {
       title: "Name",
@@ -69,7 +88,14 @@ const UserPage: NextPage = () => {
             Add New User
           </Button>
         </Row>
-        <Table loading={loading} rowKey="id" columns={columns} dataSource={userList} />
+        <Table
+          loading={loading}
+          pagination={pagination}
+          onChange={handleTableChange}
+          rowKey="id"
+          columns={columns}
+          dataSource={userList}
+        />
         <Modal
           title="Add Truck"
           visible={isModalVisible}
@@ -80,7 +106,7 @@ const UserPage: NextPage = () => {
             <Form.Item label="First Name" name="first_name" required>
               <Input />
             </Form.Item>
-            <Form.Item label="Last Name" name="last_name" >
+            <Form.Item label="Last Name" name="last_name">
               <Input />
             </Form.Item>
             <Form.Item label="Email" name="email" required>
@@ -89,7 +115,12 @@ const UserPage: NextPage = () => {
             <Form.Item label="Password" name="password" required>
               <Input type="password" />
             </Form.Item>
-            <Form.Item label="Status" name="is_active" valuePropName="checked" required>
+            <Form.Item
+              label="Status"
+              name="is_active"
+              valuePropName="checked"
+              required
+            >
               <Switch />
             </Form.Item>
             <Form.Item label="Role" name="role" required>

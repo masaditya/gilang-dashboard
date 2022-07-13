@@ -53,10 +53,10 @@ export const AddUser = (data: UserInfoType): Promise<AxiosResponse> => {
   return HTTPClientAuthAdmin(Token).post("/user", data);
 };
 
-export const HardResetPasswordUser = (id: string): Promise<AxiosResponse> => {
+export const HardResetPasswordUser = (id: string, data : any): Promise<AxiosResponse> => {
   return HTTPClientAuthAdmin(Token).patch(
     "/user/hard-reset-password/" + id,
-    {}
+    data
   );
 };
 
