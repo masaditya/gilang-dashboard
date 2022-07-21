@@ -49,7 +49,7 @@ const TableProducts = (props: {
       key: "user",
       dataIndex: "user",
       render: (user, record) => (
-        <Typography.Paragraph>{user.full_name}</Typography.Paragraph>
+        <Typography.Paragraph>{user?.full_name}</Typography.Paragraph>
       ),
     },
     {

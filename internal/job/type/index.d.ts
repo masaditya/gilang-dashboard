@@ -27,7 +27,17 @@ export type Detail= {
   weight:     number;
   head:       number;
   product : any;
-  histories:  any[];
+  histories:  HistoryType[];
+}
+
+export interface HistoryType {
+  id?:         number;
+  created_at?: Date;
+  updated_at?: Date;
+  product_id?: number;
+  weight?:     number;
+  head?:       number;
+  user?:       UserInfoType;
 }
 
 export type ProcessJobType = {

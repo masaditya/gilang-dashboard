@@ -4,21 +4,24 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { ErrorHandler } from "utils/errorHandler";
 import { FindPO, GetJob, GetJobByID, GetJobDetail, GetReportPDF } from "../api";
-import { JobType, SalesOrderType } from "../type";
+import { HistoryType, JobType, SalesOrderType } from "../type";
 
 const JobStateFn = (userInfo?: UserInfoType, id_job?: string | number) => {
   const router = useRouter();
 
   const [jobList, setJobList] = useState<JobType[]>([]);
   const [jobDetail, setJobDetail] = useState<JobType>();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
     pageSize: 10,
   });
 
+  const [history, setHistory] = useState<HistoryType[]>([]);
+  const [showModalHistory, setShowModalHistory] = useState<boolean>(false);
+
   React.useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     GetJob(pagination.current, pagination.pageSize)
       .then((res) => {
         setJobList(res.data.data);
@@ -27,7 +30,7 @@ const JobStateFn = (userInfo?: UserInfoType, id_job?: string | number) => {
           current: res.data.meta.currentPage,
           pageSize: res.data.meta.itemsPerPage,
         });
-        setLoading(false)
+        setLoading(false);
       })
       .catch(ErrorHandler);
   }, [pagination.current, pagination.pageSize]);
@@ -47,8 +50,13 @@ const JobStateFn = (userInfo?: UserInfoType, id_job?: string | number) => {
   }, [id_job]);
 
   const getDetailTimbang = (id: string) => {
+    setShowModalHistory(true)
+    setLoading(true)
     GetJobDetail(id)
-      .then((res) => console.log(res.data))
+      .then((res) => {
+        setHistory(res.data.histories)
+        setLoading(false)
+      })
       .catch(ErrorHandler);
   };
 
@@ -68,7 +76,10 @@ const JobStateFn = (userInfo?: UserInfoType, id_job?: string | number) => {
     getDetailTimbang,
     pagination,
     handleTableChange,
-    loading
+    loading,
+    history,
+    showModalHistory,
+    setShowModalHistory
   };
 };
 

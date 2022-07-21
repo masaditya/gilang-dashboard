@@ -57,3 +57,9 @@ a {
 .login-form-button {
   width: 100%;
 }
+
+.dashboard-lottie{
+  max-width: 450px;
+  margin: auto;
+
+}

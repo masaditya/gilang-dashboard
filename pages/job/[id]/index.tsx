@@ -9,6 +9,8 @@ import {
   Empty,
   Image,
   Layout,
+  List,
+  Modal,
   Row,
   Table,
   Tag,
@@ -19,13 +21,22 @@ import { useRouter } from "next/router";
 import JobStateFn from "internal/job/state";
 import moment from "moment";
 import TableProducts from "components/table/products";
+import { HistoryType } from "internal/job/type";
 
 const JobDetailPage: NextPage = (props: PropsType) => {
   const router = useRouter();
-  const { jobDetail, getPDFReport, getDetailTimbang,  } = JobStateFn(
-    props.user,
-    router.query?.id?.toString()
-  );
+  const {
+    jobDetail,
+    getPDFReport,
+    getDetailTimbang,
+    setShowModalHistory,
+    showModalHistory,
+    loading,
+    history,
+  } = JobStateFn(props.user, router.query?.id?.toString());
+  const tmp = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 22, 33, 44, 55, 66, 77, 88, 99,
+  ];
   return (
     <MainLayout title="Job Detail" router={router}>
       <Card
@@ -91,8 +102,54 @@ const JobDetailPage: NextPage = (props: PropsType) => {
         <Divider orientation="left"> Products </Divider>
 
         <Layout>
-          {jobDetail?.so && <TableProducts data={jobDetail?.details} getDetailTimbang={getDetailTimbang} />}
+          {jobDetail?.so && (
+            <TableProducts
+              data={jobDetail?.details}
+              getDetailTimbang={getDetailTimbang}
+            />
+          )}
         </Layout>
+
+        <Modal
+          width={1000}
+          title="Timbang History"
+          visible={showModalHistory}
+          footer={null}
+          onCancel={() => setShowModalHistory(false)}
+        >
+          <List
+            header={
+              <Row>
+                <Col span={6}>Waktu Timbang</Col>
+                <Col span={4}>Nama Produk</Col>
+                <Col span={4}>Berat</Col>
+                <Col span={4}>Jumlah Ekor</Col>
+                <Col span={6}>Nama Penimbang</Col>
+              </Row>
+            }
+            loading={loading}
+            dataSource={history}
+            style={{height:400, overflowY:"auto"}}
+            renderItem={(item: HistoryType) => (
+              <Row
+                style={{ marginBottom: 15, marginTop: 10 }}
+              >
+                <Col span={6}>
+                  {moment(item.created_at).format("DD MMM YYYY")}
+                </Col>
+                <Col span={4}> {item.product_id} </Col>
+                <Col span={4}> {item.weight} Kg</Col>
+                <Col span={4}> {item.head} Ekor </Col>
+                <Col span={6}> {item.user?.full_name} </Col>
+                {/* <Col span={6}>{item}</Col>
+                <Col span={4}>{item}</Col>
+                <Col span={4}>{item}</Col>
+                <Col span={4}>{item}</Col>
+                <Col span={6}>{item}</Col> */}
+              </Row>
+            )}
+          />
+        </Modal>
 
         <Divider orientation="left"> Attachment </Divider>
         {jobDetail?.attachments && jobDetail?.attachments.length > 0 ? (
