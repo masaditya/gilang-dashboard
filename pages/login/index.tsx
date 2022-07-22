@@ -13,9 +13,32 @@ import { useRouter } from "next/router";
 import React from "react";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { ErrorHandler } from "utils/errorHandler";
+import { LottiePlayer } from "lottie-web";
 
 const LoginPage: NextPage = () => {
   const router = useRouter();
+
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [lottie, setLottie] = React.useState<LottiePlayer | null>(null);
+
+  React.useEffect(() => {
+    import("lottie-web").then((Lottie) => setLottie(Lottie.default));
+  }, []);
+
+  React.useEffect(() => {
+    if (lottie && ref.current) {
+      const animation = lottie.loadAnimation({
+        container: ref.current,
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        // path to your animation file, place it inside public folder
+        path: "/lottie-login.json",
+      });
+
+      return () => animation.destroy();
+    }
+  }, [lottie]);
 
   React.useEffect(() => {
     if (typeof window !== "undefined") {
@@ -32,8 +55,8 @@ const LoginPage: NextPage = () => {
             SetTokenAdmin(res.data.access_token);
             SetToken(res.data.access_token);
             router.push("/");
-          }else{
-            notification.error({message : "User Not Registered!"})
+          } else {
+            notification.error({ message: "User Not Registered!" });
           }
         }
       )
@@ -42,6 +65,8 @@ const LoginPage: NextPage = () => {
 
   return (
     <Layout className="form-layout">
+      <div className="lottie-login" ref={ref} />
+
       <Form
         name="normal_login"
         className="login-form"
