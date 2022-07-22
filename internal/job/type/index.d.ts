@@ -37,7 +37,8 @@ export interface HistoryType {
   product_id?: number;
   weight?:     number;
   head?:       number;
-  user?:       UserInfoType;
+  user?:       User;
+  product?:    ProductElement;
 }
 
 export type ProcessJobType = {

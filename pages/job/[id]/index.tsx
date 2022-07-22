@@ -120,8 +120,8 @@ const JobDetailPage: NextPage = (props: PropsType) => {
           <List
             header={
               <Row>
-                <Col span={6}>Waktu Timbang</Col>
-                <Col span={4}>Nama Produk</Col>
+                <Col span={4}>Waktu Timbang</Col>
+                <Col span={6}>Nama Produk</Col>
                 <Col span={4}>Berat</Col>
                 <Col span={4}>Jumlah Ekor</Col>
                 <Col span={6}>Nama Penimbang</Col>
@@ -134,10 +134,10 @@ const JobDetailPage: NextPage = (props: PropsType) => {
               <Row
                 style={{ marginBottom: 15, marginTop: 10 }}
               >
-                <Col span={6}>
+                <Col span={4}>
                   {moment(item.created_at).format("DD MMM YYYY")}
                 </Col>
-                <Col span={4}> {item.product_id} </Col>
+                <Col span={6}> {item.product?.product?.name} - {item.product?.product?.description} </Col>
                 <Col span={4}> {item.weight} Kg</Col>
                 <Col span={4}> {item.head} Ekor </Col>
                 <Col span={6}> {item.user?.full_name} </Col>
