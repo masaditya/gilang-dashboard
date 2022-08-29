@@ -12,7 +12,7 @@ import {
   List,
   Modal,
   Row,
-  Table,
+  Space,
   Tag,
   Typography,
 } from "antd";
@@ -22,6 +22,7 @@ import JobStateFn from "internal/job/state";
 import moment from "moment";
 import TableProducts from "components/table/products";
 import { HistoryType } from "internal/job/type";
+import { UserInfoType } from "internal/user/type";
 
 const JobDetailPage: NextPage = (props: PropsType) => {
   const router = useRouter();
@@ -33,23 +34,30 @@ const JobDetailPage: NextPage = (props: PropsType) => {
     showModalHistory,
     loading,
     history,
+    setShowModalUser,
+    showModalUser,
+    userList,
+    handleAssingUser,
   } = JobStateFn(props.user, router.query?.id?.toString());
-  const tmp = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 22, 33, 44, 55, 66, 77, 88, 99,
-  ];
+
   return (
     <MainLayout title="Job Detail" router={router}>
       <Card
         title="Job Detail"
         extra={
-          <Button
-            onClick={() =>
-              jobDetail?.so_id && getPDFReport(jobDetail?.so_id.toString())
-            }
-            type="primary"
-          >
-            Report PDF
-          </Button>
+          <Space>
+            <Button onClick={() => setShowModalUser(true)} type="primary">
+              Assign User
+            </Button>
+            <Button
+              onClick={() =>
+                jobDetail?.so_id && getPDFReport(jobDetail?.so_id.toString())
+              }
+              type="primary"
+            >
+              Report PDF
+            </Button>
+          </Space>
         }
       >
         <Row>
@@ -111,6 +119,45 @@ const JobDetailPage: NextPage = (props: PropsType) => {
         </Layout>
 
         <Modal
+          title="Assign User"
+          visible={showModalUser}
+          footer={null}
+          onCancel={() => setShowModalUser(false)}
+        >
+          <List
+            header={
+              <Row>
+                <Col span={16}>Nama Karyawan</Col>
+                <Col span={4}>Role</Col>
+                <Col span={4}>Aksi</Col>
+              </Row>
+            }
+            loading={loading}
+            dataSource={userList}
+            style={{ height: 400, overflowY: "auto" }}
+            renderItem={(item: UserInfoType) => (
+              <Row key={item.id} style={{ marginBottom: 15, marginTop: 10 }}>
+                <Col span={16}> {item.full_name} </Col>
+                <Col span={4}>{item.role}</Col>
+                <Col span={4}>
+                  <Button
+                    onClick={() =>
+                      jobDetail?.so_id &&
+                      handleAssingUser(
+                        jobDetail?.so_id.toString(),
+                        item.id?.toString()
+                      )
+                    }
+                  >
+                    Assign
+                  </Button>
+                </Col>
+              </Row>
+            )}
+          />
+        </Modal>
+
+        <Modal
           width={1000}
           title="Timbang History"
           visible={showModalHistory}
@@ -129,23 +176,19 @@ const JobDetailPage: NextPage = (props: PropsType) => {
             }
             loading={loading}
             dataSource={history}
-            style={{height:400, overflowY:"auto"}}
+            style={{ height: 400, overflowY: "auto" }}
             renderItem={(item: HistoryType) => (
-              <Row
-                style={{ marginBottom: 15, marginTop: 10 }}
-              >
+              <Row key={item.id} style={{ marginBottom: 15, marginTop: 10 }}>
                 <Col span={4}>
                   {moment(item.created_at).format("DD MMM YYYY")}
                 </Col>
-                <Col span={6}> {item.product?.product?.name} - {item.product?.product?.description} </Col>
+                <Col span={6}>
+                  {item.product?.product?.name} -
+                  {item.product?.product?.description}
+                </Col>
                 <Col span={4}> {item.weight} Kg</Col>
                 <Col span={4}> {item.head} Ekor </Col>
                 <Col span={6}> {item.user?.full_name} </Col>
-                {/* <Col span={6}>{item}</Col>
-                <Col span={4}>{item}</Col>
-                <Col span={4}>{item}</Col>
-                <Col span={4}>{item}</Col>
-                <Col span={6}>{item}</Col> */}
               </Row>
             )}
           />

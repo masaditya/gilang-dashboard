@@ -2,7 +2,7 @@ import { TruckType } from "internal/truck/type";
 
 export type UserInfoType = {
   is_active?: boolean;
-  id?: number;
+  id: number;
   created_at?: Date;
   updated_at?: Date;
   first_name?: string;

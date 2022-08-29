@@ -52,7 +52,7 @@ const Home: NextPage = (props: PropsType) => {
           Welcome, {props.user?.full_name} !
         </Typography.Title>
         <Row gutter={[12, 12]}>
-          <Col span={8}>
+          <Col xs={24} lg={8}>
             <Card hoverable onClick={() => router.push("/user")}>
               <Typography.Title level={1}>
                 {overview?.total_users}
@@ -66,7 +66,7 @@ const Home: NextPage = (props: PropsType) => {
               </Typography.Paragraph>
             </Card>
           </Col>
-          <Col span={8}>
+          <Col xs={24} lg={8}>
             <Card hoverable onClick={() => router.push("/truck")}>
               <Typography.Title level={1}>
                 {overview?.total_trucks}
@@ -78,7 +78,7 @@ const Home: NextPage = (props: PropsType) => {
               <Typography.Paragraph>Manage Truck Expedisi</Typography.Paragraph>
             </Card>
           </Col>
-          <Col span={8}>
+          <Col xs={24} lg={8}>
             <Card hoverable onClick={() => router.push("/job")}>
               <Typography.Title level={1}>
                 {overview?.total_jobs}
@@ -94,25 +94,25 @@ const Home: NextPage = (props: PropsType) => {
         </Row>
         <Card hoverable style={{ marginTop: 20, marginBottom: 20 }}>
           <Row gutter={[12, 12]}>
-            <Col span={6}>
+            <Col xs={12} lg={6}>
               <Statistic
                 title="Job Complete"
                 value={overview?.total_by_job_status?.complete}
               />
             </Col>
-            <Col span={6}>
+            <Col xs={12} lg={6}>
               <Statistic
                 title="Job Partial Complete"
                 value={overview?.total_by_job_status?.partial}
               />
             </Col>
-            <Col span={6}>
+            <Col xs={12} lg={6}>
               <Statistic
                 title="Job Process"
                 value={overview?.total_by_job_status?.process}
               />
             </Col>
-            <Col span={6}>
+            <Col xs={12} lg={6}>
               <Statistic
                 title="Job Pending"
                 value={overview?.total_by_job_status?.pending}

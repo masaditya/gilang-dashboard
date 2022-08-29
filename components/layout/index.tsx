@@ -24,7 +24,7 @@ const MainLayout = ({
 }) => (
   <Layout style={{ minHeight: "100vh" }}>
     <Head>
-      <title> {title + " | "}  Gilang Expedisi | Rajadinar Nusantara</title>
+      <title> {title + " | "} Gilang Expedisi | Rajadinar Nusantara</title>
       <meta
         name="description"
         content="Gilang Expedisi Tracking by Rajadinar Nusantara"
@@ -34,8 +34,7 @@ const MainLayout = ({
       <Link href="/">
         <div className="logo">
           <Typography.Title level={1} className="logo-title">
-            {" "}
-            Gilang App{" "}
+            Gilang App
           </Typography.Title>
         </div>
       </Link>
@@ -50,7 +49,6 @@ const MainLayout = ({
           onClick={() => router.push("/user")}
           icon={<UserOutlined />}
         >
-          {" "}
           User
         </Menu.Item>
         <Menu.Item
@@ -58,7 +56,6 @@ const MainLayout = ({
           onClick={() => router.push("/truck")}
           icon={<CarOutlined />}
         >
-          {" "}
           Truck
         </Menu.Item>
         <Menu.Item
@@ -66,7 +63,6 @@ const MainLayout = ({
           onClick={() => router.push("/job")}
           icon={<PartitionOutlined />}
         >
-          {" "}
           Job
         </Menu.Item>
         <Menu.Item
@@ -78,7 +74,6 @@ const MainLayout = ({
           }}
           icon={<LogoutOutlined color="#e74c3c" />}
         >
-          {" "}
           Logout
         </Menu.Item>
       </Menu>

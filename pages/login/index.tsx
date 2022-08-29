@@ -14,6 +14,7 @@ import React from "react";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { ErrorHandler } from "utils/errorHandler";
 import { LottiePlayer } from "lottie-web";
+import Head from "next/head";
 
 const LoginPage: NextPage = () => {
   const router = useRouter();
@@ -64,45 +65,54 @@ const LoginPage: NextPage = () => {
   };
 
   return (
-    <Layout className="form-layout">
-      <div className="lottie-login" ref={ref} />
+    <>
+      <Head>
+        <title> Login | Gilang Expedisi | Rajadinar Nusantara</title>
+        <meta
+          name="description"
+          content="Gilang Expedisi Tracking by Rajadinar Nusantara"
+        />
+      </Head>
+      <Layout className="form-layout">
+        <div className="lottie-login" ref={ref} />
 
-      <Form
-        name="normal_login"
-        className="login-form"
-        initialValues={{ remember: true }}
-        onFinish={handleSubmit}
-      >
-        <Form.Item
-          name="email"
-          rules={[{ required: true, message: "Please input your Email!" }]}
+        <Form
+          name="normal_login"
+          className="login-form"
+          initialValues={{ remember: true }}
+          onFinish={handleSubmit}
         >
-          <Input
-            prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="Email"
-          />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          rules={[{ required: true, message: "Please input your Password!" }]}
-        >
-          <Input
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
-            placeholder="Password"
-          />
-        </Form.Item>
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
+          <Form.Item
+            name="email"
+            rules={[{ required: true, message: "Please input your Email!" }]}
           >
-            Log in
-          </Button>
-        </Form.Item>
-      </Form>
-    </Layout>
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="Email"
+            />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            rules={[{ required: true, message: "Please input your Password!" }]}
+          >
+            <Input
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              type="password"
+              placeholder="Password"
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="login-form-button"
+            >
+              Log in
+            </Button>
+          </Form.Item>
+        </Form>
+      </Layout>
+    </>
   );
 };
 
